@@ -354,11 +354,11 @@
             resultats.push({ tirada: "2a de curts", repartiment: `un dos`, compas: tiratge_curts - 3, peu });
 
             // 2a llargs
-            repartiment = tiratge_llargs % 2 === 0 ? 5 : 3;
-            text = tiratge_llargs % 2 === 0 ? "quatre" : "dos";
-            peu = '-';
-            console.log(`2a de llargs: un ${text} al ${tiratge_llargs - repartiment}   ||   peu inici curts: ${peu}`);
-            resultats.push({ tirada: "2a de llargs", repartiment: `un ${text}`, compas: tiratge_llargs - repartiment, peu });
+            repartiment = calcular_repartiment_llargs(peu, tiratge_llargs);
+            compas_ = calcular_compas_llargs(peu, tiratge_llargs);
+            peu = 'e';
+            console.log(`3a llargs: ${repartiment} ${compas_}`);
+            resultats.push({ tirada: "2a de llargs", repartiment: `un ${repartiment}`, compas: compas_, peu });
 
             return generarTaula(resultats);
         }
