@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repartiment - Estil empordanès</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .content-section {
+            display: none;
+            padding: 20px;
+        }
+
+        .active-section {
+            display: block;
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">EINES SARDANISTES</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="mostrarSeccio('repartir')">REPARTIR</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="mostrarSeccio('revessa')">RESOLDRE REVESSA</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="mostrarSeccio('serveis')">Serveis</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="mostrarSeccio('contacte')">Contacte</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5" id="repartir" class="content-section">
+        <div class="card shadow-lg">
+            <div class="card-body">
+                <h2 class="text-center mb-4">Repartiment - Estil empordanès</h2>
+
+                <div class="mb-3">
+                    <label for="n_tirades" class="form-label">Nombre de tirades</label>
+                    <select id="n_tirades" class="form-select">
+                        <option value="2">2 tirades</option>
+                        <option value="4">4 tirades</option>
+                        <option value="5">5 tirades</option>
+                        <option value="7" selected>7 tirades</option>
+                        <option value="10">10 tirades</option>
+                    </select>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="curts" class="form-label">Curts</label>
+                        <input type="number" id="curts" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="llargs" class="form-label">Llargs</label>
+                        <input type="number" id="llargs" class="form-control">
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary w-100" onclick="executarCodi()">Fer Acció</button>
+                </div>
+
+                <div id="resultat" class="mt-4 p-3 bg-white border rounded"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5" id="revessa" class="content-section">
+        <div class="card shadow-lg">
+            <div class="card-body">
+                <h2 class="text-center mb-4">Resoldre revesses</h2>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="grups" class="form-label">Grups</label>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <button type="button" class="btn btn-primary" onclick="afegir_motiu_complet()">Afegir
+                                    motiu complet</button>
+                            </div>
+                            <div class="col-md-6">
+                                <button type="button" class="btn btn-primary" onclick="afegir_motiu_complet()">Afegir
+                                    motiu parcial</button>
+                            </div>
+                        </div>
+
+                        <div class="row" id="revesses_text_boxes">
+                            <div class="row mb-2">
+                                <div class="col-md-2">
+                                    <span>Motiu 1</span>
+                                </div>
+                                <div class="col-md-10">
+                                    <input type="text" id="grups_0" class="form-control">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary w-100" onclick="revessa()">Fer Acció</button>
+                </div>
+
+                <div id="resultat_revessa" class="mt-4 p-3 bg-white border rounded"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+        document.getElementById("repartir").style.display = "block";
+        document.getElementById("revessa").style.display = "none";
+
+        function mostrarSeccio(id) {
+
+            document.getElementById("repartir").style.display = "none";
+            document.getElementById("revessa").style.display = "none";
+
+            document.getElementById(id).style.display = "block";
+
+        }
+
+        function calcular_peu_curts(peu_inici, tiratge) {
+
+            let residu = tiratge % 4;
+
+            if (peu_inici == 'e') {
+
+                if (residu == 1) {
+                    return 'e';
+                } else if (residu == 3) {
+                    return 'd';
+                }
+
+            } else {
+
+                if (residu == 3) {
+                    return 'e';
+                } else if (residu == 1) {
+                    return 'd';
+                }
+
+            }
+
+        }
+
+        function calcular_peu_llargs(peu_inici, tiratge) {
+
+            let residu = tiratge % 8;
+
+            if (peu_inici == 'e') {
+
+                if (residu == 3) {
+                    return 'e';
+                } else if (residu == 7) {
+                    return 'd';
+                }
+
+            } else {
+
+                if (residu == 7) {
+                    return 'e';
+                } else if (residu == 3) {
+                    return 'd';
+                }
+
+            }
+
+        }
+
+        function calcular_repartiment_llargs(peu_inici, tiratge_llargs) {
+
+            let residu = (tiratge_llargs - 10) % 8;
+
+            if (peu_inici == 'e') {
+
+                if (residu == 0) {
+                    return "un dos";
+                } else if (residu == 1) {
+                    return "un tres";
+                } else if (residu == 2) {
+                    return "un quatre";
+                } else if (residu == 3) {
+                    return "tres dosos i un tres";
+                } else if (residu == 4) {
+                    return "dos dosos i un dos";
+                } else if (residu == 5) {
+                    return "dos dosos i un tres";
+                } else if (residu == 6) {
+                    return "un dosos i un dos";
+                } else if (residu == 7) {
+                    return "un dosos i un tres";
+                }
+
+            } else {
+
+                if (residu == 0) {
+                    return "dos dosos i un dos";
+                } else if (residu == 1) {
+                    return "dos dosos i un tres";
+                } else if (residu == 2) {
+                    return "un dosos i un dos";
+                } else if (residu == 3) {
+                    return "un dosos i un tres";
+                } else if (residu == 4) {
+                    return "un dos";
+                } else if (residu == 5) {
+                    return "un tres";
+                } else if (residu == 6) {
+                    return "un quatre";
+                } else if (residu == 7) {
+                    return "tres dosos i un tres";
+                }
+
+            }
+        }
+
+        function calcular_compas_llargs(peu_inici, tiratge_llargs) {
+
+            let residu = (tiratge_llargs - 10) % 8;
+
+            if (peu_inici == 'e') {
+
+                if (residu == 0) {
+                    return (tiratge_llargs - 3);
+                } else if (residu == 1) {
+                    return (tiratge_llargs - 4);
+                } else if (residu == 2) {
+                    return (tiratge_llargs - 5);
+                } else if (residu == 3) {
+                    return (tiratge_llargs - 10);
+                } else if (residu == 4) {
+                    return (tiratge_llargs - 7);
+                } else if (residu == 5) {
+                    return (tiratge_llargs - 8);
+                } else if (residu == 6) {
+                    return (tiratge_llargs - 5);
+                } else if (residu == 7) {
+                    return (tiratge_llargs - 6);
+                }
+
+            } else {
+
+                if (residu == 0) {
+                    return (tiratge_llargs - 7);
+                } else if (residu == 1) {
+                    return (tiratge_llargs - 8);
+                } else if (residu == 2) {
+                    return (tiratge_llargs - 5);
+                } else if (residu == 3) {
+                    return (tiratge_llargs - 6);
+                } else if (residu == 4) {
+                    return (tiratge_llargs - 3);
+                } else if (residu == 5) {
+                    return (tiratge_llargs - 4);
+                } else if (residu == 6) {
+                    return (tiratge_llargs - 5);
+                } else if (residu == 7) {
+                    return (tiratge_llargs - 10);
+                }
+
+            }
+        }
+
+
+        function generarTaula(dades) {
+            let taula = `<table class="table table-bordered mt-3">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Tirada</th>
+                                    <th>Repartiment</th>
+                                    <th>Compàs</th>
+                                    <th>Peu inici següent</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+
+            dades.forEach(row => {
+                taula += `<tr>
+                            <td>${row.tirada}</td>
+                            <td>${row.repartiment}</td>
+                            <td>${row.compas}</td>
+                            <td>${row.peu}</td>
+                        </tr>`;
+            });
+
+            taula += `</tbody></table>`;
+            return taula;
+        }
+
+        function setTirades(tiratge_curts, tiratge_llargs) {
+            let peu = 'e';
+            let repartiment, text, compas;
+            let resultats = [];
+
+            // 2a curts
+            peu = calcular_peu_curts(peu, tiratge_curts * 2 - 3);
+            console.log(`2a de curts: un dos al ${tiratge_curts - 3}   ||   peu inici llargs: ${peu}`);
+            resultats.push({ tirada: "2a de curts", repartiment: `un dos`, compas: tiratge_curts - 3, peu });
+
+            // 2a llargs
+            repartiment = tiratge_llargs % 2 === 0 ? 5 : 3;
+            text = tiratge_llargs % 2 === 0 ? "quatre" : "dos";
+            peu = calcular_peu_llargs(peu, tiratge_llargs * 2 - repartiment);
+            console.log(`2a de llargs: un ${text} al ${tiratge_llargs - repartiment}   ||   peu inici curts: ${peu}`);
+            resultats.push({ tirada: "2a de llargs", repartiment: `un ${text}`, compas: tiratge_llargs - repartiment, peu });
+
+            // 3a curts
+            repartiment = tiratge_curts % 2 === 0 ? 3 : 4;
+            text = tiratge_curts % 2 === 0 ? "dos" : "tres";
+            peu = calcular_peu_curts(peu, tiratge_curts - repartiment);
+            console.log(`3a de curts: un ${text} al ${tiratge_curts - repartiment}   ||   peu inici llargs: ${peu}`);
+            resultats.push({ tirada: "3a de curts", repartiment: `un ${text}`, compas: tiratge_curts - repartiment, peu });
+
+            // 3a llargs
+            repartiment = calcular_repartiment_llargs(peu, tiratge_llargs);
+            compas_ = calcular_compas_llargs(peu, tiratge_llargs);
+            peu = 'e';
+            console.log(`3a llargs: ${repartiment} ${compas_}`);
+            resultats.push({ tirada: "3a de llargs", repartiment: `un ${repartiment}`, compas: compas_, peu });
+
+            // 4a llargs
+            repartiment = calcular_repartiment_llargs('e', tiratge_llargs);
+            compas_ = calcular_compas_llargs('e', tiratge_llargs);
+            peu = '-';
+            console.log(`4a llargs: ${repartiment} ${compas_}`);
+            resultats.push({ tirada: "4a de llargs", repartiment: `un ${repartiment}`, compas: compas_, peu });
+
+            return generarTaula(resultats);
+        }
+
+        function quatreTirades(tiratge_curts, tiratge_llargs) {
+            let peu = 'e';
+            let repartiment, text;
+            let resultats = [];
+
+            // 2a curts
+            peu = calcular_peu_curts(peu, tiratge_curts * 2 - 3);
+            console.log(`2a de curts: un dos al ${tiratge_curts - 3}   ||   peu inici llargs: ${peu}`);
+            resultats.push({ tirada: "2a de curts", repartiment: `un dos`, compas: tiratge_curts - 3, peu });
+
+            // 2a llargs
+            repartiment = tiratge_llargs % 2 === 0 ? 5 : 3;
+            text = tiratge_llargs % 2 === 0 ? "quatre" : "dos";
+            peu = '-';
+            console.log(`2a de llargs: un ${text} al ${tiratge_llargs - repartiment}   ||   peu inici curts: ${peu}`);
+            resultats.push({ tirada: "2a de llargs", repartiment: `un ${text}`, compas: tiratge_llargs - repartiment, peu });
+
+            return generarTaula(resultats);
+        }
+
+        function cincTirades(tiratge_curts, tiratge_llargs) {
+            let peu = 'e';
+            let repartiment, compas;
+            let resultats = [];
+
+            // 2a curts
+            peu = calcular_peu_curts(peu, tiratge_curts * 2 - 3);
+            console.log(`2a de curts: un dos al ${tiratge_curts - 3}   ||   peu inici llargs ${peu}`);
+            resultats.push({ tirada: "2a de curts", repartiment: `un dos`, compas: tiratge_curts - 3, peu });
+
+            // 2a llargs
+            repartiment = calcular_repartiment_llargs(peu, tiratge_llargs);
+            compas_ = calcular_compas_llargs(peu, tiratge_llargs);
+            peu = 'e';
+            console.log(`3a llargs: ${repartiment} ${compas_}`);
+            resultats.push({ tirada: "2a de llargs", repartiment: `un ${repartiment}`, compas: compas_, peu });
+
+            // 3a llargs
+            repartiment = calcular_repartiment_llargs('e', tiratge_llargs);
+            compas_ = calcular_compas_llargs('e', tiratge_llargs);
+            peu = '-';
+            console.log(`4a llargs: ${repartiment} ${compas_}`);
+            resultats.push({ tirada: "2a de llargs", repartiment: `un ${repartiment}`, compas: compas_, peu });
+
+            return generarTaula(resultats);
+        }
+
+        function dosTirades(tiratge_curts, tiratge_llargs) {
+            let peu = 'e';
+            let repartiment, text;
+            let resultats = [];
+
+            // 1a curts
+            repartiment = tiratge_curts % 2 === 0 ? 3 : 4;
+            text = tiratge_curts % 2 === 0 ? "dos" : "tres";
+            peu = calcular_peu_curts(peu, tiratge_curts - repartiment);
+            console.log(`1a de curts: un ${text} al ${tiratge_curts - repartiment}   ||   peu inici llargs: ${peu}`);
+            resultats.push({ tirada: "1a de curts", repartiment: `un ${repartiment}`, compas: tiratge_curts - repartiment, peu });
+
+            // 1a llargs
+            repartiment = calcular_repartiment_llargs(peu, tiratge_llargs);
+            compas_ = calcular_compas_llargs(peu, tiratge_llargs);
+            peu = '-';
+            console.log(`1a llargs: ${repartiment} ${compas_}`);
+            resultats.push({ tirada: "1a de llargs", repartiment: `un ${repartiment}`, compas: compas_, peu });
+
+            return generarTaula(resultats);
+        }
+
+
+        function executarCodi() {
+            let tiratge_curts = document.getElementById("curts").value;
+            let tiratge_llargs = document.getElementById("llargs").value;
+            let n_tirades = document.getElementById("n_tirades").value;
+            let resultat = "";
+
+            if (!tiratge_curts || !tiratge_llargs) {
+                document.getElementById("curts").focus();
+                return;
+            }
+
+            console.clear(); // Esborrem la consola per evitar acumulació d'informació antiga
+
+            if (n_tirades == 2) {
+                resultat = dosTirades(tiratge_curts, tiratge_llargs);
+            } else if (n_tirades == 4) {
+                resultat = quatreTirades(tiratge_curts, tiratge_llargs);
+            } else if (n_tirades == 5) {
+                resultat = cincTirades(tiratge_curts, tiratge_llargs);
+            } else if (n_tirades == 7) {
+                resultat = setTirades(tiratge_curts, tiratge_llargs);
+            } else if (n_tirades == 10) {
+
+            }
+
+
+            document.getElementById("resultat").innerHTML = resultat;
+
+        }
+
+
+    </script>
+
+
+
+    <script>
+        function treure_grups_curts(grups) {
+            let index = 0;
+            let acumulador = 0;
+            let temp_grups = [];
+            while (index < grups.length && acumulador <= 49) {
+                acumulador += grups[index];
+                if (acumulador >= 16 && acumulador <= 49) {
+                    temp_grups.push(grups[index]);
+                }
+                index++;
+            }
+            return temp_grups;
+        }
+
+        function tirades_grups(grups_tirades, tiratge_minim, tiratge_maxim) {
+            let temp_tiratges = [];
+
+            for (let i = 0; i < grups_tirades.length; i++) {
+
+                let temp = [];
+                let suma = 0;
+                for (let j = 0; j <= i; j++) {
+                    temp.push(grups_tirades[j]);
+                }
+
+                for (let j = 0; j < temp.length; j++) {
+                    suma += temp[j];
+                }
+
+                if (suma >= tiratge_minim && suma <= tiratge_maxim) {
+                    temp_tiratges.push(temp);
+                }
+
+            }
+            return temp_tiratges;
+        }
+
+        function filtre_estructura(grups, tirades_grups_curts) {
+            let primera_tirada = [];
+            let temp_tiratges = [];
+            let trobat = false;
+
+            for (let i = 0; i < tirades_grups_curts.length; i++) {
+
+                primera_tirada = tirades_grups_curts[i];
+
+                let j = primera_tirada.length;
+                let k = 0;
+
+                trobat = false;
+                while (k < primera_tirada.length - 1 && grups[j] != undefined) {
+                    if (primera_tirada[k] != grups[j]) {
+                        trobat = true;
+                    }
+                    j++;
+                    k++;
+                }
+
+                if (!trobat) {
+                    temp_tiratges.push(primera_tirada);
+                }
+            }
+
+            return temp_tiratges;
+        }
+
+        function treure_grups_llargs(grups) {
+            let index = 0;
+            let acumulador = 0;
+            let temp_grups = [];
+            while (index < grups.length && acumulador <= 99) {
+                acumulador += grups[index];
+                if (acumulador <= 99) {
+                    temp_grups.push(grups[index]);
+                }
+                index++;
+            }
+            return temp_grups;
+        }
+
+        function suma_array(array) {
+            let sumatori = 0;
+            for (let q = 0; q < array.length; q++) {
+                sumatori += array[q];
+            }
+            return sumatori;
+        }
+
+
+        function resoldre_motiu(grups) {
+            let grups_curts = [], tirades_grups_curts = [];
+            let resultat_tiratge = [], resultat_grups = [];
+
+            // separem els grups que poden arribar a formar tirades de curts
+            grups_curts = treure_grups_curts(grups);
+            //console.log(grups_curts);
+
+            // formem les possibles tirades per composició de grups
+            tirades_grups_curts = tirades_grups(grups_curts, 16, 49);
+            //console.log(tirades_grups_curts);
+
+            // treiem els tiratges que no compleixen el criteri d'estructura (tots els grups han de ser iguals, tret de l'últim)
+            tirades_grups_curts = filtre_estructura(grups, tirades_grups_curts);
+            //console.log(tirades_grups_curts);
+
+
+            let repeticio_curts;
+            let repeticio_llargs;
+            let primera_curts;
+            let sub_grups = [];
+            let tirades_grups_llargs = [];
+
+            for (let i = 0; i < tirades_grups_curts.length; i++) {
+
+                primera_curts = tirades_grups_curts[i];
+
+                repeticio_curts = grups[primera_curts.length * 2 - 1] - primera_curts[primera_curts.length - 1];
+
+                sub_grups = [];
+
+                for (let j = (primera_curts.length * 2); j < grups.length; j++) {
+                    sub_grups.push(grups[j]);
+                }
+
+
+                // separem els grups que poden arribar a formar tirades de llargs
+                grups_llargs = treure_grups_llargs(sub_grups);
+                //console.log(grups_llargs);
+
+                // formem les possibles tirades per composició de grups
+                tirades_grups_llargs = tirades_grups(grups_llargs, 50, 99);
+                //console.log(tirades_grups_llargs);
+
+                // treiem els tiratges que no compleixen el criteri d'estructura (tots els grups han de ser iguals, tret de l'últim)
+                tirades_grups_llargs = filtre_estructura(sub_grups, tirades_grups_llargs);
+                //console.log(tirades_grups_llargs);
+
+                let suma = 0;
+                let tirades_grups_llargs_2 = [];
+                for (let j = 0; j < tirades_grups_llargs.length; j++) {
+                    for (let k = 0; k < tirades_grups_llargs[j].length; k++) {
+                        suma += tirades_grups_llargs[j][k];
+                    }
+                    if (suma >= 50) {
+                        tirades_grups_llargs_2.push(tirades_grups_llargs[j]);
+
+                        resultat_grups.push([primera_curts, tirades_grups_llargs[j]]);
+                        resultat_tiratge.push([suma_array(primera_curts), suma_array(tirades_grups_llargs[j])]);
+                    }
+                }
+            }
+
+            console.log("RESULTATS");
+            for (let y = 0; y < resultat_tiratge.length; y++) {
+                //console.log(resultat_tiratge[y]);
+                //console.log(resultat_grups[y]);
+                document.getElementById("resultat_revessa").innerHTML += resultat_tiratge[y][0] + "x" + resultat_tiratge[y][1];
+                document.getElementById("resultat_revessa").innerHTML += "\n";
+            }
+
+            return resultat_tiratge;
+        }
+
+
+        function revessa() {
+            let resultat = [];
+
+            let taula = `<table class="table table-bordered mt-3">
+                <thead class="table-dark">
+                    <tr>
+                        <th>MOTIU</th>
+                        <th>TIRATGES</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+            console.log(text_boxes);
+            for (let x = 0; x < text_boxes; x++) {
+                let text = document.getElementById("grups_" + x).value;
+                let grups = text.split(",").map(Number);
+                let resultat_parcial = resoldre_motiu(grups);
+
+                taula += "<tr><td>Motiu " + x + "</td><td>";
+
+                for (let t = 0; t < resultat_parcial.length; t++) {
+                    if (t < resultat_parcial.length - 1) {
+                        taula += resultat_parcial[t][0] + "x" + resultat_parcial[t][1] + ", ";
+                    } else {
+                        taula += resultat_parcial[t][0] + "x" + resultat_parcial[t][1];
+                    }
+
+                }
+
+                taula += "</td></tr>";
+
+                resultat.push(resultat_parcial);
+            }
+
+            taula += `</tbody></table>`;
+
+            document.getElementById("resultat_revessa").innerHTML = taula;
+
+            console.log(resultat);
+            comparador(resultat);
+
+            
+
+        }
+
+        function comparador(resultat) {
+            let iguals = [];
+            console.log("COMPARANT");
+
+            const input = resultat;
+
+            const intersection = (arrays) => {
+                return arrays.reduce((acc, curr) => {
+                    return acc.filter(item => curr.some(subArray => JSON.stringify(subArray) === JSON.stringify(item)));
+                });
+            };
+
+            const result = intersection(input);
+
+            let taula = `<table class="table table-bordered mt-3">
+                <thead class="table-dark">
+                    <tr>
+                        <th>COMPARAT</th>
+                        <th>TIRATGES</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+            
+            taula += "<tr><td>Resultat</td><td>";
+
+            for (let t = 0; t < result.length; t++) {
+                if (t < result.length - 1) {
+                    taula += result[t][0] + "x" + result[t][1] + ", ";
+                } else {
+                    taula += result[t][0] + "x" + result[t][1];
+                }
+
+            }
+
+            taula += "</td></tr>";
+
+            document.getElementById("resultat_revessa").innerHTML += taula;
+
+            
+
+            console.log(result); // [[16], [50]]
+
+        }
+
+        let text_boxes = 1;
+        function afegir_motiu_complet() {
+
+            let div = document.getElementById("revesses_text_boxes");
+
+            let div_text_box_row = document.createElement("div");
+            div_text_box_row.classList.add("row");
+            div_text_box_row.classList.add("mb-2");
+
+            let div_span_col = document.createElement("div");
+            div_span_col.classList.add("col-md-2");
+
+            let span = document.createElement("span");
+            let motiu = document.createTextNode = "Motiu " + (text_boxes + 1);
+            span.append(motiu);
+
+            div_span_col.append(span);
+
+            let div_text_box_col = document.createElement("div");
+            div_text_box_col.classList.add("col-md-10");
+
+            let input = document.createElement("input");
+            input.type = "type";
+            input.id = "grups_" + text_boxes;
+            input.classList.add("form-control");
+
+            div_text_box_col.append(input);
+
+            div_text_box_row.append(div_span_col);
+            div_text_box_row.append(div_text_box_col);
+            div.append(div_text_box_row);
+
+            text_boxes++;
+        }
+
+    </script>
+
+</body>
+
+</html>
